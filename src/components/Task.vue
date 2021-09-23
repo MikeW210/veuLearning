@@ -14,6 +14,6 @@ export default {
     components:{
     Tas
     },
-    emits: ['tas-delete'],
+    emits: ['tas-delete', 'color-changer'],
 }
 </script>

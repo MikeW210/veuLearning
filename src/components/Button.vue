@@ -11,7 +11,7 @@ export default {
     },
     methods: {
         onClick(){
-            console.log('twoja stara')
+            this.$emit('btn-click')
         }
     }
 }
