@@ -1,94 +1,38 @@
 <template>
 <div class="container">
   <Header @toggle-add-task="toggleAddTas" title="taskTracker" :showAddTas="showAddTas" />
-  <div v-if="showAddTas">
-  <Addtas @add-tas="addTas" />
-  </div>
-  <Task @color-changer="changeColor" @tas-delete="deleteTask" :task="task"/>
-  <h1> HelloWorld </h1>
-
+  
+  <router-view :showAddTas="showAddTas"></router-view>
+  <Footer/>
+ 
 </div>
  
 </template>
 
 <script>
+import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
-import Task from './components/Task'
-import Addtas from './components/Addtas'
+
 
 export default {
   name: 'App',
   components: {
     Header,
-    Task,
-    Addtas,
+    Footer,
   },
   data(){
     return{
-    task: [],
     showAddTas: false,
     }
 
   },
-  async created() {
-    this.task = await this.fetchTask()
-        
-
-  },
+  
   methods:{
-    async fetchTask(){
-      const res = await fetch('api/task')
-      const data = await res.json()
-      return data
-      
-    }, 
-    async fetchTas(id){
-      const res = await fetch(`api/task/${id}`)
-      const data = await res.json()
-      return data
-      
-    },
+    
     toggleAddTas(){
       this.showAddTas = !this.showAddTas
-    },
-    async addTas(newTas){
-      const res = await fetch('api/task', {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(newTas),
-      })
-
-      this.task = [...this.task, newTas]
-
-    },
-    async deleteTask(id){
-      if(confirm('u sure?')){
-        const res = await fetch(`api/task/${id}`, {
-        method: 'DELETE',
-        })
-        res.status === 200 ? (this.task = this.task.filter((tas) => tas.id !== id)) : alert('Errror deleting task')
-        
-
-      }
-
+    },   
   },
-    async changeColor(id){
-      const tasToToggle = await this.fetchTas(id)
-      const updateTas = {...tasToToggle, reminder: !tasToToggle.reminder}
-      const res = await fetch(`api/task/${id}`, {
-        method: 'PUT',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(updateTas),
-      })
-      const data = await res.json()
-      this.task = this.task.map((tas) => tas.id === id ? {...tas, reminder: !data.reminder} : tas)
-    }
-
-  }
 }
 </script>
 
